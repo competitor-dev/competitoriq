@@ -146,11 +146,17 @@ async function runAnalysis() {
   try {
     // Step 1: Search location
     setStatus('Searching Local Falcon…');
-    const q = url.toLowerCase().replace(/https?:\/\//,'').replace(/^www\./,'').replace(/\/.*/,'').replace(/\.(com|net|org|io|co|biz).*/,'').replace(/[-_]/g,' ').trim();
-    const locData = await apiFetch('/v1/locations/', { query: q, limit: '5' });
+    const domain = url.toLowerCase().replace(/https?:\/\//,'').replace(/^www\./,'').replace(/\/.*/,'').trim();
+    const q = domain.replace(/\.(com|net|org|io|co|biz).*/,'').replace(/[-_]/g,' ').trim();
+    const locData = await apiFetch('/v1/locations/', { query: q, limit: '20' });
     const locs = locData?.data?.locations || [];
-    if (!locs.length) throw new Error(`No client found matching "${q}" in Local Falcon.`);
-    const loc = locs[0];
+    if (!locs.length) throw new Error(`No client found matching "${q}".`);
+
+    // Find exact URL match first, fall back to first result
+    const loc = locs.find(l => {
+    const locUrl = (l.url||'').toLowerCase().replace(/https?:\/\//,'').replace(/^www\./,'').replace(/\/.*/,'').trim();
+    return locUrl === domain || locUrl.includes(domain) || domain.includes(locUrl);
+    }) || locs[0];
 
     // Step 2: Get scan reports
     setStatus('Loading scan reports…');
