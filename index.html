@@ -339,7 +339,7 @@ async function generateStrategy() {
   try {
     const GEMINI_KEY = 'AIzaSyD94yUJRoEJ_lWqQiwhc3IBPRlhvRixdBg';
     const prompt = `You are a Local SEO strategist. Return ONLY valid JSON, no markdown.\nBusiness:${CLIENT.name}|Category:${CLIENT.category}|Location:${CLIENT.address}\nKeyword:${CLIENT.keyword}|ARP:${cl.arp}|SoLV:${cl.solv}%|Reviews:${CLIENT.reviews}|Rating:${CLIENT.rating}\nRivals:${rCtx}\n{"summary":"","quick_wins":[{"action":"","impact":5,"timeline":"This week"},{"action":"","impact":4,"timeline":"Week 1-2"},{"action":"","impact":5,"timeline":"This week"}],"strategic_plays":[{"action":"","timeline":"Month 1-2","rationale":""},{"action":"","timeline":"Month 2-3","rationale":""}],"keyword_gaps":[{"keyword":"","volume":1000,"difficulty":"easy","priority":"critical"},{"keyword":"","volume":800,"difficulty":"easy","priority":"high"},{"keyword":"","volume":600,"difficulty":"medium","priority":"high"}],"risk_score":5,"confidence_score":8}`;
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_KEY}`,{
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
     });
